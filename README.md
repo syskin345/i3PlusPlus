@@ -6,7 +6,7 @@
   - [Overhauled move menu](http://i.imgur.com/48AXclL.png)
   
 - LCD Brightness Control (change the brightness of the lcd)
-- LCD "lockscreen mode" (lcd dims after some time 
+- LCD "lockscreen mode" (lcd dims after some time and first touch "wakes" it again and doesnt activate buttons. No more accidental print interupts!)
 
 # Mods Planned:
 - Multiple preheat profiles with different temperatures (hotend/bed)
