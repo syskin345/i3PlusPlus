@@ -1,4 +1,57 @@
-i3Extra
+# Mods implemented:
+
+LCD Firmware:
+- access to sd/print menu without sdcard inserted
+
+Printer Firmware:
+- Diagonal leveling assistant
+
+All changes made so far are independent from the other firmware.
+So you can install only printer firmware mod to get sdmenu mod or only printer firmware for diagonal leveling. Or both.
+
+# Mods Planned:
+- Slightly longer file names in sd menu
+- Multiple preheat profiles with different temperatures (hotend/bed)
+- Subfolder support for sdcard
+- [Complete menu redesign](http://imgur.com/VQiZ4BC) (Will require removal of chinese translation for space reasons)
+
+# Installation:
+
+LCD Firmware:
+
+http://www.wanhao3dprinter.com/FAQ/ShowArticle.asp?ArticleID=79
+
+Printer Firmware:
+
+Download Arduino 1.6.4 from the [arduino website](https://www.arduino.cc/en/main/OldSoftwareReleases). (Doesnt compile with newest version)
+Connect printer to pc. If you have trouble with drivers look [here](http://3dprinterwiki.info/wiki/wanhao-duplicator-i3-plus/wanhao-i3-plus-documentation-factory-files/ch340x-driver-information/).
+Load Marlin.ino with Arduino. Select Arduino Mega under Tools->Boards.
+Check the sketch with the ✔ button. If no errors show up upload the sketch to your printer.
+
+If anything goes wrong, you can get the stock firmware files from [here](http://www.wanhao3dprinter.com/FAQ/ShowArticle.asp?ArticleID=79)
+
+# Usefull development links:
+
+Marlin changes for LCD:
+
+http://3dprinterwiki.info/wiki/wanhao-duplicator-i3-plus/wanhao-i3-plus-firmware-description/
+
+LCD Manufraturer (contains sdk, datasheets, drivers and more):
+
+http://dwin.com.cn/english/products/bt-72876584214435.html
+
+
+# Disclaimer
+
+I'm not responsible for any damage done to your printer or lcd.
+
+# Things i noticed:
+
+It looks like there are different versions of the screen in circulation. Mine is "DMT48270M050_06W". [But i found screenshots of others with different versions](https://i2.wp.com/3dprinterwiki.info/wp-content/uploads/2016/09/IMG_8041.jpeg). I think they should all be compatible, but if it's not working on your screen, this may or may not be the cause.
+
+
+
+# Based on i3Extra by nepeee:
 
 This is a modified version of the Marlin 1.1.0-RC8 firmware for the WANHAO Duplicator i3 Plus 3d printer.
 Currently it's in alpha state, same lcd functions are working and some of them is not.
@@ -10,7 +63,7 @@ Changelog Marlin:
 - Added a serial bridge mode for lcd firmware update over the printers usb port
 
 Changelog LCD:
-- Removed the chines language
+- Removed the chinese language
 - Renamed all the bitmaps to fix the firmware update problem caused by the chines characters
 - Removed some start animation frames
 - Added the lcd update bridge mode button to the system menu
