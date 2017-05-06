@@ -112,6 +112,25 @@ void lcdShowPage(uint8_t pageNumber) {
   Serial2.write(lcdBuff, 7);
 }
 
+//show page OK
+void lcdChangeBrightness(bool increase) {
+	//5A A5 03 80 01 00-40
+  lcdBuff[0] = 0x5A;//frame header
+  lcdBuff[1] = 0xA5;
+
+  lcdBuff[2] = 0x03;//data length
+
+  lcdBuff[3] = 0x80;//command - write data to register
+  lcdBuff[4] = 0x01;
+  if (increase) {
+	lcdBuff[5] = 0x20;
+  } else {
+	lcdBuff[5] = 0x40;
+  }
+
+  Serial2.write(lcdBuff, 6);
+}
+
 //receive data from lcd OK
 void readLcdSerial() {
   if (Serial2.available() > 0) {
@@ -411,28 +430,28 @@ void readLcdSerial() {
             nextOpTime = millis() + 200;
             opMode = OPMODE_LEVEL_INIT;
           }
-          else if (lcdData == 1) { //fl
+          else if (lcdData == 1) { //front-left
             enqueue_and_echo_commands_P((PSTR("G1 X30 Y30 Z10 F6000")));
             enqueue_and_echo_commands_P((PSTR("G28 Z0")));
           }
-          else if (lcdData == 2) { //rr
+          else if (lcdData == 2) { //back-right
             enqueue_and_echo_commands_P((PSTR("G1 X170 Y170 Z10 F6000")));
             enqueue_and_echo_commands_P((PSTR("G28 Z0")));
           }
-          else if (lcdData == 3) { //fr
+          else if (lcdData == 3) { //front-right
             enqueue_and_echo_commands_P((PSTR("G1 X170 Y30 Z10 F6000")));
             enqueue_and_echo_commands_P((PSTR("G28 Z0")));
           }
-          else if (lcdData == 4) { //rl
+          else if (lcdData == 4) { //back-left
             enqueue_and_echo_commands_P((PSTR("G1 X30 Y170 Z10 F6000")));
             enqueue_and_echo_commands_P((PSTR("G28 Z0")));
           }
-          else if (lcdData == 5) { //c
+          else if (lcdData == 5) { //center
             enqueue_and_echo_commands_P((PSTR("G1 X100 Y100 Z10 F6000")));
             enqueue_and_echo_commands_P((PSTR("G28 Z0")));
           }
-          else if (lcdData == 6) { //back
-            enqueue_and_echo_commands_P((PSTR("G1 Z30 F6000")));
+          else if (lcdData == 6) { //back pressed
+            enqueue_and_echo_commands_P((PSTR("G1 Z30 F6000"))); //move nozzle up
             lcdShowPage(37); //tool menu
           }
           break;
@@ -441,22 +460,22 @@ void readLcdSerial() {
           enqueue_and_echo_commands_P(PSTR("G91")); // relative mode
 
           if (lcdData == 0)
-            enqueue_and_echo_commands_P(PSTR("G1 X10 F3000"));
+            enqueue_and_echo_commands_P(PSTR("G1 X10 F3000")); //x++
           else if (lcdData == 1)
-            enqueue_and_echo_commands_P(PSTR("G1 X-10 F3000"));
+            enqueue_and_echo_commands_P(PSTR("G1 X-10 F3000")); //x--
           else if (lcdData == 2)
-            enqueue_and_echo_commands_P(PSTR("G1 Y10 F3000"));
+            enqueue_and_echo_commands_P(PSTR("G1 Y10 F3000")); //y++
           else if (lcdData == 3)
-            enqueue_and_echo_commands_P(PSTR("G1 Y-10 F3000"));
+            enqueue_and_echo_commands_P(PSTR("G1 Y-10 F3000")); //y--
           else if (lcdData == 4)
-            enqueue_and_echo_commands_P(PSTR("G1 Z10 F3000"));
+            enqueue_and_echo_commands_P(PSTR("G1 Z10 F3000")); //z++
           else if (lcdData == 5)
-            enqueue_and_echo_commands_P(PSTR("G1 Z-10 F3000"));
+            enqueue_and_echo_commands_P(PSTR("G1 Z-10 F3000")); //z--
           else if (thermalManager.degHotend(0) >= 180) {
             if (lcdData == 6)
-              enqueue_and_echo_commands_P(PSTR("G1 E10 F60"));
+              enqueue_and_echo_commands_P(PSTR("G1 E10 F60")); //e++
             else if (lcdData == 7)
-              enqueue_and_echo_commands_P(PSTR("G1 E-10 F60"));
+              enqueue_and_echo_commands_P(PSTR("G1 E-10 F60")); //e--
           }
 
           enqueue_and_echo_commands_P(PSTR("G90")); // absolute mode
@@ -482,17 +501,13 @@ void readLcdSerial() {
           enqueue_and_echo_commands_P(PSTR("G28"));
           break;
         }
-      case 0xFF: {
-          lcdShowPage(58); //update screen
-          while (1) {
-            watchdog_reset();
-            if (Serial.available())
-              Serial2.write(Serial.read());
-            if (Serial2.available())
-              Serial.write(Serial2.read());
-          }
+      case 0x5B: {
+
+          lcdSendScreenBrightness();
+
+          lcdShowPage(59);//print config
           break;
-        }
+    }
       default:
         break;
     }
@@ -509,4 +524,18 @@ void lcdSendMarlinVersion() {
 
   strncpy((char*)lcdBuff + 6, SHORT_BUILD_VERSION, 15);
   Serial2.write(lcdBuff, 21);
+}
+
+void lcdSendScreenBrightness() {
+		//5A A5 03 80 01 05
+          lcdBuff[0] = 0x5A;
+          lcdBuff[1] = 0xA5;
+          lcdBuff[2] = 0x0B;
+          lcdBuff[3] = 0x82;
+          lcdBuff[4] = 0x05;
+          lcdBuff[5] = 0x01;
+          lcdBuff[6] = planner.lcdBrightness; //0x2B
+          Serial2.write(lcdBuff, 7);
+
+  Serial2.write(lcdBuff, 6);
 }

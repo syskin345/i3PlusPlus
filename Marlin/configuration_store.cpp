@@ -220,6 +220,7 @@ void Config_Postprocess() {
     EEPROM_WRITE(planner.min_travel_feedrate_mm_s);
     EEPROM_WRITE(planner.min_segment_time);
     EEPROM_WRITE(planner.max_jerk);
+    EEPROM_WRITE(planner.lcdBrightness);
     EEPROM_WRITE(home_offset);
 
     #if HOTENDS > 1
@@ -409,6 +410,7 @@ void Config_Postprocess() {
       EEPROM_READ(planner.min_travel_feedrate_mm_s);
       EEPROM_READ(planner.min_segment_time);
       EEPROM_READ(planner.max_jerk);
+      EEPROM_READ(planner.lcdBrightness);
       EEPROM_READ(home_offset);
 
       #if HOTENDS > 1
