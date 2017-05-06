@@ -1,19 +1,16 @@
-# Mods implemented:
+# Do not use this Firmware yet if you dont know what you do. It's unfinished and has bugs.
 
-LCD Firmware:
-- access to sd/print menu without sdcard inserted
-
-Printer Firmware:
-- Diagonal leveling assistant
-
-All changes made so far are independent from the other firmware.
-So you can install only printer firmware mod to get sdmenu mod or only printer firmware for diagonal leveling. Or both.
+# Mods in work:
+- [Complete menu rework](http://imgur.com/VQiZ4BC) (50% done):
+  - [New leveling assistant (base work by nepeee)](http://i.imgur.com/D5bKZYu.png)
+  - [Overhauled move menu](http://i.imgur.com/48AXclL.png)
+  
+- LCD Brightness Control (change the brightness of the lcd)
+- LCD "lockscreen mode" (lcd dims after some time 
 
 # Mods Planned:
-- Slightly longer file names in sd menu
 - Multiple preheat profiles with different temperatures (hotend/bed)
 - Subfolder support for sdcard
-- [Complete menu redesign](http://imgur.com/VQiZ4BC) (Will require removal of chinese translation for space reasons)
 
 # Installation:
 
