@@ -1,4 +1,4 @@
-# Do not use this Firmware yet if you dont know what you do. It's unfinished and has bugs.
+Do not use this Firmware yet if you dont know what you do. It's unfinished and has bugs.
 
 # Mods in work:
 - [Complete menu rework](http://imgur.com/VQiZ4BC) (50% done):
