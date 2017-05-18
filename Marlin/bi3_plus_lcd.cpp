@@ -11,12 +11,17 @@
 #include "utility.h"
 #include "watchdog.h"
 
+#if ENABLED(PRINTCOUNTER)
+  #include "printcounter.h"
+  #include "duration_t.h"
+#endif
+
 #define OPMODE_NONE 0
 #define OPMODE_LEVEL_INIT 1
 #define OPMODE_LOAD_FILAMENT 2
 #define OPMODE_UNLOAD_FILAMENT 3
 
-uint8_t lcdBuff[21];
+uint8_t lcdBuff[26];
 uint16_t fileIndex = 0;
 millis_t nextOpTime, nextLcdUpdate = 0;
 uint8_t opMode = OPMODE_NONE;
@@ -112,25 +117,6 @@ void lcdShowPage(uint8_t pageNumber) {
   Serial2.write(lcdBuff, 7);
 }
 
-//show page OK
-void lcdChangeBrightness(bool increase) {
-	//5A A5 03 80 01 00-40
-  lcdBuff[0] = 0x5A;//frame header
-  lcdBuff[1] = 0xA5;
-
-  lcdBuff[2] = 0x03;//data length
-
-  lcdBuff[3] = 0x80;//command - write data to register
-  lcdBuff[4] = 0x01;
-  if (increase) {
-	lcdBuff[5] = 0x20;
-  } else {
-	lcdBuff[5] = 0x40;
-  }
-
-  Serial2.write(lcdBuff, 6);
-}
-
 //receive data from lcd OK
 void readLcdSerial() {
   if (Serial2.available() > 0) {
@@ -159,40 +145,40 @@ void readLcdSerial() {
 
     switch (lcdCommand) {
       case 0x32: {//SD list navigation up/down OK
-          if (card.sdprinting)
+          if (card.sdprinting) {
             lcdShowPage(33); //show print menu
+          }
           else {
             if (lcdData == 0)
               card.initsd();
 
             if (card.cardOK) {
               uint16_t fileCnt = card.getnrfilenames();
-              if (fileIndex < 1)
-                fileIndex = fileCnt;
               card.getWorkDirName();//??
 
-              if (fileCnt > 4) {
+              if (fileCnt > 5) {
                 if (lcdData == 1) { //UP
-                  if (fileIndex > 4)
-                    fileIndex -= 4;
+                  if ((fileIndex > 5) < fileCnt)
+                    fileIndex += 5;
                 }
                 else if (lcdData == 2) { //DOWN
-                  if (fileIndex <= (fileCnt - 4))
-                    fileIndex += 4;
+                  if (fileIndex >= 5)
+                    fileIndex -= 5;
                 }
               }
 
               lcdBuff[0] = 0x5A;
               lcdBuff[1] = 0xA5;
-              lcdBuff[2] = 0x11;
+              lcdBuff[2] = 0x85;
               lcdBuff[3] = 0x82;
               lcdBuff[4] = 0x01;
               lcdBuff[5] = 0x00;
               Serial2.write(lcdBuff, 6);
 
-              for (uint8_t i = 0; i < 4; i++) {
-                card.getfilename(fileIndex + i);
-                Serial2.write(card.longFilename, 26);
+              for (uint8_t i = 0; i < 5; i++) {
+                card.getfilename(fileIndex - i);
+                strncpy(lcdBuff, card.longFilename, 26);
+                Serial2.write(lcdBuff, 26);
               }
 
               if (lcdData == 0)
@@ -203,19 +189,21 @@ void readLcdSerial() {
         }
       case 0x33: {//FILE SELECT OK
           if (card.cardOK) {
-            card.getfilename(fileIndex + lcdData);
-            card.openFile(card.filename, true);
+            card.getfilename(fileIndex - lcdData);
 
             lcdBuff[0] = 0x5A;
             lcdBuff[1] = 0xA5;
-            lcdBuff[2] = 0x11;
+            lcdBuff[2] = 0x1D;
             lcdBuff[3] = 0x82;
 
             lcdBuff[4] = 0x01;
-            lcdBuff[5] = 0x34;
+            lcdBuff[5] = 0x4E;
             Serial2.write(lcdBuff, 6);
-            Serial2.write(card.longFilename, 26);
-
+            
+            strncpy(lcdBuff, card.longFilename, 26);
+            Serial2.write(lcdBuff, 26);
+            
+            card.openFile(card.filename, true);
             card.startFileprint();
 
             lcdShowPage(33);//print menu
@@ -229,7 +217,7 @@ void readLcdSerial() {
           thermalManager.disable_all_heaters();
           fanSpeeds[0] = 0;
 
-          lcdShowPage(29); //main menu
+          lcdShowPage(11); //main menu
           break;
         }
       case 0x36: {//print pause OK
@@ -457,20 +445,34 @@ void readLcdSerial() {
           break;
         }
       case 0x01: {//move OK!!!
-          enqueue_and_echo_commands_P(PSTR("G91")); // relative mode
+        enqueue_and_echo_commands_P(PSTR("G91")); // relative mode
+
+        if (lcdData < 2) {
+          if (!axis_homed[X_AXIS])
+            enqueue_and_echo_commands_P(PSTR("G28 X0"));
 
           if (lcdData == 0)
-            enqueue_and_echo_commands_P(PSTR("G1 X10 F3000")); //x++
+            enqueue_and_echo_commands_P(PSTR("G1 X10 F3000"));
           else if (lcdData == 1)
-            enqueue_and_echo_commands_P(PSTR("G1 X-10 F3000")); //x--
-          else if (lcdData == 2)
-            enqueue_and_echo_commands_P(PSTR("G1 Y10 F3000")); //y++
+            enqueue_and_echo_commands_P(PSTR("G1 X-10 F3000"));
+        }
+        else if (lcdData < 4) {
+          if (!axis_homed[Y_AXIS])
+            enqueue_and_echo_commands_P(PSTR("G28 Y0"));
+            
+          if (lcdData == 2)
+            enqueue_and_echo_commands_P(PSTR("G1 Y10 F3000"));
           else if (lcdData == 3)
-            enqueue_and_echo_commands_P(PSTR("G1 Y-10 F3000")); //y--
-          else if (lcdData == 4)
-            enqueue_and_echo_commands_P(PSTR("G1 Z10 F3000")); //z++
-          else if (lcdData == 5)
-            enqueue_and_echo_commands_P(PSTR("G1 Z-10 F3000")); //z--
+            enqueue_and_echo_commands_P(PSTR("G1 Y-10 F3000"));
+          }
+          else if (lcdData < 6) {
+            if (!axis_homed[Z_AXIS])
+              enqueue_and_echo_commands_P(PSTR("G28 Z0"));
+            if (lcdData == 4)
+              enqueue_and_echo_commands_P(PSTR("G1 Z10 F3000"));
+            else if (lcdData == 5)
+              enqueue_and_echo_commands_P(PSTR("G1 Z-10 F3000"));
+          }
           else if (thermalManager.degHotend(0) >= 180) {
             if (lcdData == 6)
               enqueue_and_echo_commands_P(PSTR("G1 E10 F60")); //e++
@@ -483,6 +485,7 @@ void readLcdSerial() {
         }
       case 0x54: {//disable motors OK!!!
           enqueue_and_echo_commands_P(PSTR("M84"));
+          axis_homed[X_AXIS] = axis_homed[Y_AXIS] = axis_homed[Z_AXIS] = false;
           break;
         }
       case 0x43: {//home x OK!!!
@@ -501,13 +504,44 @@ void readLcdSerial() {
           enqueue_and_echo_commands_P(PSTR("G28"));
           break;
         }
-      case 0x5B: {
+      case 0x5B: { //stats menu
+            //entering settings
+            lcdSendStats();
 
-          lcdSendScreenBrightness();
+            lcdShowPage(59);//open screen settings
+            
+          /*} else if (lcdData == 1) { //saving screenbrightness
+            lcdBuff[0] = 0x5A;
+            lcdBuff[1] = 0xA5;
 
-          lcdShowPage(59);//print config
+            lcdBuff[2] = 0x04;//4 byte
+
+            lcdBuff[3] = 0x83;//command (read sram)
+
+            lcdBuff[4] = 0x05;// start address
+            lcdBuff[5] = 0x20;// start address
+
+            lcdBuff[6] = 0x01; //1 vp
+
+            Serial2.write(lcdBuff, 7); //
+
+            uint8_t bytesRead = Serial2.readBytes(lcdBuff, 9);
+            if ((bytesRead == 9) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
+              planner.lcdBrightness = (uint8_t)lcdBuff[9];
+              lcdSendBrightnessToRegister();
+            }*/
+        break;
+      }
+      case 0xFF: {
+          while (1) {
+            watchdog_reset();
+            if (Serial.available())
+              Serial2.write(Serial.read());
+            if (Serial2.available())
+              Serial.write(Serial2.read());
+          }
           break;
-    }
+        }
       default:
         break;
     }
@@ -526,16 +560,21 @@ void lcdSendMarlinVersion() {
   Serial2.write(lcdBuff, 21);
 }
 
-void lcdSendScreenBrightness() {
-		//5A A5 03 80 01 05
-          lcdBuff[0] = 0x5A;
-          lcdBuff[1] = 0xA5;
-          lcdBuff[2] = 0x0B;
-          lcdBuff[3] = 0x82;
-          lcdBuff[4] = 0x05;
-          lcdBuff[5] = 0x01;
-          lcdBuff[6] = planner.lcdBrightness; //0x2B
-          Serial2.write(lcdBuff, 7);
-
-  Serial2.write(lcdBuff, 6);
+//
+void lcdSendStats() {
+  //5A A5 03 80 01 05
+  printStatistics stats = print_job_timer.getStats();
+  lcdBuff[0] = 0x5A;
+  lcdBuff[1] = 0xA5;
+  lcdBuff[2] = 0x07;
+  lcdBuff[3] = 0x82;
+  lcdBuff[4] = 0x05; //5040
+  lcdBuff[5] = 0x40;
+  //Total prints (including aborted)
+  lcdBuff[6] = highByte((int16_t)stats.totalPrints);
+  lcdBuff[7] = lowByte((int16_t)stats.totalPrints);
+  //Finished prints
+  lcdBuff[8] = highByte((int16_t)stats.finishedPrints);
+  lcdBuff[9] = lowByte((int16_t)stats.finishedPrints);
+  Serial2.write(lcdBuff, 10);
 }

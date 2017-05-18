@@ -11,6 +11,7 @@ void lcdStatusUpdate(millis_t ms);
 void lcdShowPage(uint8_t pageNumber);
 void readLcdSerial();
 void lcdSendMarlinVersion();
-void lcdSendScreenBrightness();
+void lcdSendStats();
+void lcdSendBrightnessToRegister();
 
 #endif
