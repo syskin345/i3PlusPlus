@@ -18,9 +18,128 @@
     <None Include="Marlin.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.Marlin.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="bi3_plus_lcd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blinkm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cardreader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="configuration_store.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dac_mcp4728.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="digipot_mcp4451.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="endstops.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M100_Free_Mem_Chk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarlinSerial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Marlin_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_bed_leveling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="planner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="planner_bezier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="printcounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qr_solve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sd2Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SdBaseFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SdFatUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SdFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SdVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="servo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stepper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stepper_dac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stepper_indirection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stopwatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="temperature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="twibus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ultralcd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vector_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="watchdog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="digipot_mcp4018.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G26_Mesh_Validation_Tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hex_print_routines.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="least_squares_fit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nozzle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="serial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ubl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ubl_G29.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ubl_motion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="bi3_plus_lcd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -196,9 +315,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="language_tr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="language_tr_utf8.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="language_uk.h">
@@ -510,100 +626,131 @@
     <ClInclude Include="watchdog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="bi3_plus_lcd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="blinkm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cardreader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="configuration_store.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dac_mcp4728.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="digipot_mcp4451.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="endstops.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="M100_Free_Mem_Chk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MarlinSerial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Marlin_main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_bed_leveling.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="planner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="planner_bezier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="printcounter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qr_solve.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sd2Card.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SdBaseFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SdFatUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SdFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SdVolume.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="servo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stepper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stepper_dac.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stepper_indirection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stopwatch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="temperature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="twibus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ultralcd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vector_3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="watchdog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="dogm_font_data_ISO10646_1_PL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hex_print_routines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="language_zh_CN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="language_zh_TW.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="least_squares_fit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pinsDebug_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pinsDebug_Teensyduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pins_CHEAPTRONICv2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pins_SCOOVO_X9H.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="serial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="softspi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="spi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_10.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_1010.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_1047.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_110.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_12.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_13.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_147.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_20.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_51.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_52.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_55.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_6.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_60.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_66.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_70.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_71.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_75.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_8.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_998.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thermistortable_999.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ubl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.Marlin.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

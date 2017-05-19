@@ -48,10 +48,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\libraries\LiquidCrystal\src;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src\utility;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;$(ProjectDir)..\..\..\..\Documents\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\mega;$(ProjectDir)..\Marlin;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\avr\;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\libraries\LiquidCrystal\src;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src\utility;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;$(ProjectDir)..\..\..\..\..\Documents\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\mega;$(ProjectDir)..\Marlin;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\avr\;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.Marlin.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>__AVR_ATmega2560__;F_CPU=16000000L;ARDUINO=10801;ARDUINO_AVR_MEGA2560;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_ATmega2560__;_VMDEBUG=1;F_CPU=16000000L;ARDUINO=10801;ARDUINO_AVR_MEGA2560;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -78,6 +78,48 @@
     <None Include="Marlin.ino">
       <FileType>CppCode</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="bi3_plus_lcd.cpp" />
+    <ClCompile Include="blinkm.cpp" />
+    <ClCompile Include="cardreader.cpp" />
+    <ClCompile Include="configuration_store.cpp" />
+    <ClCompile Include="dac_mcp4728.cpp" />
+    <ClCompile Include="digipot_mcp4018.cpp" />
+    <ClCompile Include="digipot_mcp4451.cpp" />
+    <ClCompile Include="endstops.cpp" />
+    <ClCompile Include="G26_Mesh_Validation_Tool.cpp" />
+    <ClCompile Include="hex_print_routines.cpp" />
+    <ClCompile Include="least_squares_fit.cpp" />
+    <ClCompile Include="M100_Free_Mem_Chk.cpp" />
+    <ClCompile Include="MarlinSerial.cpp" />
+    <ClCompile Include="Marlin_main.cpp" />
+    <ClCompile Include="mesh_bed_leveling.cpp" />
+    <ClCompile Include="nozzle.cpp" />
+    <ClCompile Include="planner.cpp" />
+    <ClCompile Include="planner_bezier.cpp" />
+    <ClCompile Include="printcounter.cpp" />
+    <ClCompile Include="qr_solve.cpp" />
+    <ClCompile Include="Sd2Card.cpp" />
+    <ClCompile Include="SdBaseFile.cpp" />
+    <ClCompile Include="SdFatUtil.cpp" />
+    <ClCompile Include="SdFile.cpp" />
+    <ClCompile Include="SdVolume.cpp" />
+    <ClCompile Include="serial.cpp" />
+    <ClCompile Include="servo.cpp" />
+    <ClCompile Include="stepper.cpp" />
+    <ClCompile Include="stepper_dac.cpp" />
+    <ClCompile Include="stepper_indirection.cpp" />
+    <ClCompile Include="stopwatch.cpp" />
+    <ClCompile Include="temperature.cpp" />
+    <ClCompile Include="twibus.cpp" />
+    <ClCompile Include="ubl.cpp" />
+    <ClCompile Include="ubl_G29.cpp" />
+    <ClCompile Include="ubl_motion.cpp" />
+    <ClCompile Include="ultralcd.cpp" />
+    <ClCompile Include="utility.cpp" />
+    <ClCompile Include="vector_3.cpp" />
+    <ClCompile Include="watchdog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bi3_plus_lcd.h">
@@ -137,6 +179,9 @@
     <ClInclude Include="dogm_font_data_ISO10646_1.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="dogm_font_data_ISO10646_1_PL.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="dogm_font_data_ISO10646_1_tr.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -168,6 +213,9 @@
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="fastio.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="hex_print_routines.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="language.h">
@@ -257,10 +305,16 @@
     <ClInclude Include="language_tr.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="language_tr_utf8.h">
+    <ClInclude Include="language_uk.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="language_uk.h">
+    <ClInclude Include="language_zh_CN.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="language_zh_TW.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="least_squares_fit.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="macros.h">
@@ -285,6 +339,12 @@
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="pinsDebug.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="pinsDebug_list.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="pinsDebug_Teensyduino.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="pins_3DRAG.h">
@@ -321,6 +381,9 @@
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="pins_CHEAPTRONIC.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="pins_CHEAPTRONICv2.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="pins_CNCONTROLS_11.h">
@@ -446,6 +509,9 @@
     <ClInclude Include="pins_SAV_MKI.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="pins_SCOOVO_X9H.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="pins_SETHI.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -509,10 +575,19 @@
     <ClInclude Include="SdVolume.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="serial.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="servo.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="softspi.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="speed_lookuptable.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="spi.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="stepper.h">
@@ -536,10 +611,97 @@
     <ClInclude Include="thermistortables.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="thermistortable_1.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_10.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_1010.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_1047.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_11.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_110.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_12.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_13.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_147.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_2.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_20.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_3.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_4.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_5.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_51.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_52.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_55.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_6.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_60.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_66.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_7.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_70.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_71.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_75.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_8.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_9.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_998.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="thermistortable_999.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="twibus.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="types.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="ubl.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="ultralcd.h">
@@ -571,43 +733,15 @@
     </ClInclude>
     <ClInclude Include="__vm\.Marlin.vsarduino.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="bi3_plus_lcd.cpp" />
-    <ClCompile Include="blinkm.cpp" />
-    <ClCompile Include="cardreader.cpp" />
-    <ClCompile Include="configuration_store.cpp" />
-    <ClCompile Include="dac_mcp4728.cpp" />
-    <ClCompile Include="digipot_mcp4451.cpp" />
-    <ClCompile Include="endstops.cpp" />
-    <ClCompile Include="M100_Free_Mem_Chk.cpp" />
-    <ClCompile Include="MarlinSerial.cpp" />
-    <ClCompile Include="Marlin_main.cpp" />
-    <ClCompile Include="mesh_bed_leveling.cpp" />
-    <ClCompile Include="planner.cpp" />
-    <ClCompile Include="planner_bezier.cpp" />
-    <ClCompile Include="printcounter.cpp" />
-    <ClCompile Include="qr_solve.cpp" />
-    <ClCompile Include="Sd2Card.cpp" />
-    <ClCompile Include="SdBaseFile.cpp" />
-    <ClCompile Include="SdFatUtil.cpp" />
-    <ClCompile Include="SdFile.cpp" />
-    <ClCompile Include="SdVolume.cpp" />
-    <ClCompile Include="servo.cpp" />
-    <ClCompile Include="stepper.cpp" />
-    <ClCompile Include="stepper_dac.cpp" />
-    <ClCompile Include="stepper_indirection.cpp" />
-    <ClCompile Include="stopwatch.cpp" />
-    <ClCompile Include="temperature.cpp" />
-    <ClCompile Include="twibus.cpp" />
-    <ClCompile Include="ultralcd.cpp" />
-    <ClCompile Include="utility.cpp" />
-    <ClCompile Include="vector_3.cpp" />
-    <ClCompile Include="watchdog.cpp" />
-  </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties arduino.upload.port="COM4" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
