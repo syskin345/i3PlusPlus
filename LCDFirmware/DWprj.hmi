@@ -49,3 +49,5 @@ SPADDRESS=5000
 60=060_statistics_pressed.bmp
 61=061_auto_pid.bmp
 62=062_auto_pid_pressed.bmp
+63=063_temperature_graph.bmp
+64=064_temperature_graph_press.bmp
