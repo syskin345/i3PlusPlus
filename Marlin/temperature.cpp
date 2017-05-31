@@ -382,11 +382,22 @@ uint8_t Temperature::soft_pwm[HOTENDS];
       if (ELAPSED(ms, temp_ms + 2000UL)) {
         #if HAS_TEMP_HOTEND || HAS_TEMP_BED
           print_heaterstates();
+          updateGraphData();
           SERIAL_EOL;
         #endif
 
         temp_ms = ms;
       } // every 2 seconds
+
+      /*  // Every second
+      if (ELAPSED(ms, temp_ms + 1000UL)) {
+        #if HAS_TEMP_HOTEND || HAS_TEMP_BED
+        updateGraphData();
+        #endif
+
+        temp_ms = ms;
+      } // every second*/
+
       // Over 2 minutes?
       if (((ms - t1) + (ms - t2)) > (10L * 60L * 1000L * 2L)) {
         SERIAL_PROTOCOLLNPGM(MSG_PID_TIMEOUT);
@@ -435,6 +446,7 @@ uint8_t Temperature::soft_pwm[HOTENDS];
             _SET_BED_PID();
           #endif
         }
+        lcdShowPage(11);
         return;
       }
       lcd_update();

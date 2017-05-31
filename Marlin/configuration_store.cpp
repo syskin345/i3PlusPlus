@@ -610,6 +610,13 @@ void MarlinSettings::postprocess() {
       EEPROM_WRITE(dummy);
     #endif
 
+    EEPROM_WRITE(planner.preheat_preset1_hotend);
+    EEPROM_WRITE(planner.preheat_preset1_bed);
+    EEPROM_WRITE(planner.preheat_preset2_hotend);
+    EEPROM_WRITE(planner.preheat_preset2_bed);
+    EEPROM_WRITE(planner.preheat_preset3_hotend);
+    EEPROM_WRITE(planner.preheat_preset3_bed);
+
     if (!eeprom_write_error) {
 
       const uint16_t final_checksum = eeprom_checksum,
@@ -961,6 +968,15 @@ void MarlinSettings::postprocess() {
         EEPROM_READ(dummy);
       #endif
 
+
+      //Read preheat presets
+      EEPROM_READ(planner.preheat_preset1_hotend);
+      EEPROM_READ(planner.preheat_preset1_bed);
+      EEPROM_READ(planner.preheat_preset2_hotend);
+      EEPROM_READ(planner.preheat_preset2_bed);
+      EEPROM_READ(planner.preheat_preset3_hotend);
+      EEPROM_READ(planner.preheat_preset3_bed);
+
       if (eeprom_checksum == stored_checksum) {
         if (eeprom_read_error)
           reset();
@@ -1006,6 +1022,7 @@ void MarlinSettings::postprocess() {
       #endif
     }
 
+
     #if ENABLED(EEPROM_CHITCHAT)
       report();
     #endif
@@ -1045,6 +1062,14 @@ void MarlinSettings::reset() {
   planner.max_jerk[Y_AXIS] = DEFAULT_YJERK;
   planner.max_jerk[Z_AXIS] = DEFAULT_ZJERK;
   planner.max_jerk[E_AXIS] = DEFAULT_EJERK;
+
+  //Preheat Presets reset
+  planner.preheat_preset1_hotend = DEFAULT_PREHEAT_PRESET1_HOTEND;
+  planner.preheat_preset1_bed = DEFAULT_PREHEAT_PRESET1_BED;
+  planner.preheat_preset2_hotend = DEFAULT_PREHEAT_PRESET2_HOTEND;
+  planner.preheat_preset2_bed = DEFAULT_PREHEAT_PRESET2_BED;
+  planner.preheat_preset3_hotend = DEFAULT_PREHEAT_PRESET3_HOTEND;
+  planner.preheat_preset3_bed = DEFAULT_PREHEAT_PRESET3_BED;
 
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
     planner.z_fade_height = 0.0;

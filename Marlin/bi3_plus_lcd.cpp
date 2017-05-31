@@ -29,6 +29,7 @@ millis_t nextOpTime, nextLcdUpdate = 0;
 uint8_t opMode = OPMODE_NONE;
 uint8_t eventCnt = 0;
 uint8_t tempGraphUpdate = 0;
+uint8_t lastPage = -1;
 
 //init OK
 void lcdSetup() {
@@ -79,7 +80,14 @@ void executeLoopedOperation(millis_t ms) {
       }
     }
     else if (opMode == OPMODE_AUTO_PID) {
-      //TODO
+      if (get_command_queue_count == 0) {
+        lcdShowPage(11);
+        opMode = OPMODE_NONE;
+      }
+      else {
+        nextOpTime = ms + 200;
+        Serial.println(get_command_queue_count());
+      }
     }
   }
 }
@@ -120,19 +128,7 @@ void lcdStatusUpdate(millis_t ms) {
     if (tempGraphUpdate) {
       if (tempGraphUpdate == 2) {
         tempGraphUpdate = 1;
-
-        lcdBuff[0] = 0x5A;
-        lcdBuff[1] = 0xA5;
-        lcdBuff[2] = 0x06; //data length
-        lcdBuff[3] = 0x84; //update curve
-        lcdBuff[4] = 0x03; //channels 0,1
-        tmp = thermalManager.degHotend(0);
-        lcdBuff[5] = highByte(tmp);
-        lcdBuff[6] = lowByte(tmp);
-        lcdBuff[7] = 0x00;//0x03 bed temp
-        lcdBuff[8] = thermalManager.degBed();
-
-        Serial2.write(lcdBuff, 9);
+        updateGraphData();
       }
       else
         tempGraphUpdate = 2;
@@ -154,6 +150,27 @@ void lcdShowPage(uint8_t pageNumber) {
   lcdBuff[6] = pageNumber;
 
   Serial2.write(lcdBuff, 7);
+}
+
+//show page OK
+uint8_t lcdgetCurrentPage() {
+  lcdBuff[0] = 0x5A;//frame header
+  lcdBuff[1] = 0xA5;
+
+  lcdBuff[2] = 0x03;//data length
+
+  lcdBuff[3] = 0x81;//command - write read to register
+  lcdBuff[4] = 0x03;//register 0x03
+
+  lcdBuff[5] = 0x02;//2bytes
+
+  Serial2.write(lcdBuff, 6);
+
+  uint8_t bytesRead = Serial2.readBytes(lcdBuff, 8);
+  if ((bytesRead == 8) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
+    return (uint8_t)lcdBuff[7];
+  }
+
 }
 
 //receive data from lcd OK
@@ -247,6 +264,8 @@ void readLcdSerial() {
             card.startFileprint();
             print_job_timer.start();
 
+            tempGraphUpdate = 2;
+
             lcdShowPage(33);//print menu
           }
           break;
@@ -260,7 +279,7 @@ void readLcdSerial() {
           #if FAN_COUNT > 0
             for (uint8_t i = 0; i < FAN_COUNT; i++) fanSpeeds[i] = 0;
           #endif
-
+          tempGraphUpdate = 0;
           lcdShowPage(11); //main menu
           break;
         }
@@ -281,16 +300,87 @@ void readLcdSerial() {
           #endif
           break;
         }
-      case 0x3C: {//preheat pla OK
-          thermalManager.setTargetHotend(185, 0);
-          thermalManager.setTargetBed(50);
-          break;
+      case 0x3C: { //Preheat options
+        if (lcdData == 0) {
+          //Serial.println(thermalManager.target_temperature[0]);
+          //writing preset temps to lcd
+          lcdBuff[0] = 0x5A;
+          lcdBuff[1] = 0xA5;
+          lcdBuff[2] = 0x0F; //data length
+          lcdBuff[3] = 0x82; //write data to sram
+          lcdBuff[4] = 0x05; //starting at 0x0570 vp
+          lcdBuff[5] = 0x70;
+
+          int tmp = planner.preheat_preset1_hotend;
+          lcdBuff[6] = highByte(tmp);
+          lcdBuff[7] = lowByte(tmp);
+          tmp = planner.preheat_preset1_bed;
+          lcdBuff[8] = 0x00;
+          lcdBuff[9] = lowByte(tmp);
+          tmp = planner.preheat_preset2_hotend;
+          lcdBuff[10] = highByte(tmp);
+          lcdBuff[11] = lowByte(tmp);
+          tmp = planner.preheat_preset2_bed;
+          lcdBuff[12] = 0x00;
+          lcdBuff[13] = lowByte(tmp);
+          tmp = planner.preheat_preset3_hotend;
+          lcdBuff[14] = highByte(tmp);
+          lcdBuff[15] = lowByte(tmp);
+          tmp = planner.preheat_preset3_bed;
+          lcdBuff[16] = 0x00;
+          lcdBuff[17] = lowByte(tmp);
+
+          Serial2.write(lcdBuff, 18);
+
+          lcdShowPage(39);//open preheat screen
+          //Serial.println(thermalManager.target_temperature[0]);
         }
-      case 0x3D: {//preheat abs OK
-          thermalManager.setTargetHotend(210, 0);
-          thermalManager.setTargetBed(70);
-          break;
+        else {
+          //Serial.println(thermalManager.target_temperature[0]);
+          //read presets
+
+          lcdBuff[0] = 0x5A;
+          lcdBuff[1] = 0xA5;
+          lcdBuff[2] = 0x04; //data length
+          lcdBuff[3] = 0x83; //read sram
+          lcdBuff[4] = 0x05; //vp 0570
+          lcdBuff[5] = 0x70;
+          lcdBuff[6] = 0x06; //length
+
+          Serial2.write(lcdBuff, 7);
+
+          //read user entered values from sram
+          uint8_t bytesRead = Serial2.readBytes(lcdBuff, 19);
+          if ((bytesRead == 19) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
+            planner.preheat_preset1_hotend = (int16_t)lcdBuff[7] * 255 + lcdBuff[8];
+            planner.preheat_preset1_bed = (int8_t)lcdBuff[10];
+            planner.preheat_preset2_hotend = (int16_t)lcdBuff[11] * 255 + lcdBuff[12];
+            planner.preheat_preset2_bed = (int8_t)lcdBuff[14];
+            planner.preheat_preset3_hotend = (int16_t)lcdBuff[15] * 255 + lcdBuff[16];
+            planner.preheat_preset3_bed = (int8_t)lcdBuff[18];
+            settings.save();
+            char command[20];
+            if (lcdData == 1) {
+              thermalManager.setTargetHotend(planner.preheat_preset1_hotend, 0);
+              //Serial.println(thermalManager.target_temperature[0]);
+              sprintf(command, "M104 S%d", planner.preheat_preset1_hotend); //build heat up command (extruder)
+              enqueue_and_echo_command((const char*)&command); //enque heat command
+              sprintf(command, "M140 S%d", planner.preheat_preset1_bed); //build heat up command (bed)
+              enqueue_and_echo_command((const char*)&command); //enque heat command
+            } else if (lcdData == 2) {
+              sprintf(command, "M104 S%d", planner.preheat_preset2_hotend); //build heat up command (extruder)
+              enqueue_and_echo_command((const char*)&command); //enque heat command
+              sprintf(command, "M140 S%d", planner.preheat_preset2_bed); //build heat up command (bed)
+              enqueue_and_echo_command((const char*)&command); //enque heat command
+            } else if (lcdData == 3) {
+              sprintf(command, "M104 S%d", planner.preheat_preset3_hotend); //build heat up command (extruder)
+              enqueue_and_echo_command((const char*)&command); //enque heat command
+              sprintf(command, "M140 S%d", planner.preheat_preset3_bed); //build heat up command (bed)
+              enqueue_and_echo_command((const char*)&command); //enque heat command
+            }
+          }
         }
+      }
       case 0x34: {//cool down OK
           thermalManager.disable_all_heaters();
           break;
@@ -360,10 +450,10 @@ void readLcdSerial() {
           uint8_t bytesRead = Serial2.readBytes(lcdBuff, 21);
           if ((bytesRead == 21) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
             planner.axis_steps_per_mm[X_AXIS] = (float)((uint16_t)lcdBuff[7] * 255 + lcdBuff[8]) / 10;
-            Serial.println(lcdBuff[7]);
-            Serial.println(lcdBuff[8]);
-            Serial.println(lcdBuff[9]);
-            Serial.println(lcdBuff[10]);
+            //Serial.println(lcdBuff[7]);
+            //Serial.println(lcdBuff[8]);
+            //Serial.println(lcdBuff[9]);
+            //Serial.println(lcdBuff[10]);
             planner.axis_steps_per_mm[Y_AXIS] = (float)((uint16_t)lcdBuff[9] * 255 + lcdBuff[10]) / 10;
             planner.axis_steps_per_mm[Z_AXIS] = (float)((uint16_t)lcdBuff[11] * 255 + lcdBuff[12]) / 10;
             planner.axis_steps_per_mm[E_AXIS] = (float)((uint16_t)lcdBuff[13] * 255 + lcdBuff[14]) / 10;
@@ -648,23 +738,36 @@ void readLcdSerial() {
             if ((bytesRead == 11) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
               uint16_t hotendTemp = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
               uint16_t bedTemp = (uint16_t)lcdBuff[9] * 255 + lcdBuff[10];
-              Serial.println(hotendTemp);
-              Serial.println(bedTemp);
+              //Serial.println(hotendTemp);
+              //Serial.println(bedTemp);
               char command[20];
               if (lcdData == 1) { //Hotend pid autotune
-                sprintf(command, "G303 S%d E0 C10 U1", hotendTemp); //build auto pid command (extruder)
+                sprintf(command, "M303 S%d E0 C1 U1", hotendTemp); //build auto pid command (extruder)
               }
               else if (lcdData == 2) { //Bed pid autotune
-                sprintf(command, "G303 S%d E-1 C10 U1", bedTemp); //build auto pid command (bed)
+                sprintf(command, "M303 S%d E-1 C1 U1", bedTemp); //build auto pid command (bed)
               }
-              opMode == OPMODE_AUTO_PID;
               enqueue_and_echo_command((const char*)&command); //enque pid command
+              opMode == OPMODE_AUTO_PID;
               tempGraphUpdate = 2;
             }
           }
           break;
-	      }
-      case 0xFF: {
+	    }
+      case 0x3D: { //Close temp screen
+        if (lcdData == 1) {
+          tempGraphUpdate = 0;
+          Serial.println(lastPage);
+          lcdShowPage(lastPage);
+        }
+        else {
+          lastPage = lcdgetCurrentPage();
+          Serial.println(lastPage);
+          tempGraphUpdate = 2;
+          lcdShowPage(63);
+        }
+      }
+      /*case 0xFF: {
           lcdShowPage(58); //enable lcd bridge mode
           while (1) {
             watchdog_reset();
@@ -674,7 +777,7 @@ void readLcdSerial() {
               Serial.write(Serial2.read());
           }
           break;
-        }
+        }*/
       default:
         break;
     }
@@ -747,4 +850,18 @@ void lcdSendStats() {
   strncpy((char*)lcdBuff + 6, buffer, 21);
   Serial2.write(lcdBuff, 27);
 
+}
+
+void updateGraphData() {
+  lcdBuff[0] = 0x5A;
+  lcdBuff[1] = 0xA5;
+  lcdBuff[2] = 0x06; //data length
+  lcdBuff[3] = 0x84; //update curve
+  lcdBuff[4] = 0x03; //channels 0,1
+  lcdBuff[5] = highByte(thermalManager.degHotend(0));
+  lcdBuff[6] = lowByte(thermalManager.degHotend(0));
+  lcdBuff[7] = 0x00;//0x03 bed temp
+  lcdBuff[8] = thermalManager.degBed();
+
+  Serial2.write(lcdBuff, 9);
 }

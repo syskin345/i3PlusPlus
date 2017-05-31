@@ -792,6 +792,12 @@ extern "C" {
   extern void digipot_i2c_init();
 #endif
 
+
+uint8_t get_command_queue_count() {
+  return commands_in_queue;
+}
+
+
 /**
  * Inject the next "immediate" command, when possible, onto the front of the queue.
  * Return true if any immediate commands remain to inject.

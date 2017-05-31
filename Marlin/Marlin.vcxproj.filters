@@ -350,9 +350,6 @@
     <ClInclude Include="pins_5DPRINT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pins_A4JP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pins_AZTEEG_X1.h">
       <Filter>Header Files</Filter>
     </ClInclude>

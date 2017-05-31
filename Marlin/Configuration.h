@@ -506,6 +506,13 @@
 #define DEFAULT_RETRACT_ACCELERATION  800    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   800    // X, Y, Z acceleration for travel (non printing) moves
 
+#define DEFAULT_PREHEAT_PRESET1_HOTEND  180    // Preheat Presets
+#define DEFAULT_PREHEAT_PRESET1_BED  50
+#define DEFAULT_PREHEAT_PRESET2_HOTEND  220
+#define DEFAULT_PREHEAT_PRESET2_BED  60
+#define DEFAULT_PREHEAT_PRESET3_HOTEND  200
+#define DEFAULT_PREHEAT_PRESET3_BED  60
+
 /**
  * Default Jerk (mm/s)
  * Override with M205 X Y Z E

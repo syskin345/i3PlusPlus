@@ -86,6 +86,14 @@ float Planner::max_feedrate_mm_s[XYZE_N], // Max speeds in mm per second
       Planner::axis_steps_per_mm[XYZE_N],
       Planner::steps_to_mm[XYZE_N];
 
+int16_t preheat_preset1_hotend;
+int16_t preheat_preset2_hotend;
+int16_t preheat_preset3_hotend;
+
+int8_t preheat_preset1_bed;
+int8_t preheat_preset2_bed;
+int8_t preheat_preset3_bed;
+
 #if ENABLED(DISTINCT_E_FACTORS)
   uint8_t Planner::last_extruder = 0;     // Respond to extruder change
 #endif
