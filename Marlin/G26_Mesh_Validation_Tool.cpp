@@ -674,7 +674,7 @@
       }
     }
 
-    if (code_seen('N')) {
+    if (code_seen('N') || code_seen('n')) {
       nozzle = code_value_float();
       if (!WITHIN(nozzle, 0.1, 1.0)) {
         SERIAL_PROTOCOLLNPGM("?Specified nozzle size not plausible.");

@@ -81,7 +81,7 @@ void executeLoopedOperation(millis_t ms) {
     }
     else if (opMode == OPMODE_AUTO_PID) {
       if (get_command_queue_count == 0) {
-        lcdShowPage(11);
+        lcdShowPage(66);
         opMode = OPMODE_NONE;
       }
       else {
@@ -741,15 +741,16 @@ void readLcdSerial() {
               //Serial.println(hotendTemp);
               //Serial.println(bedTemp);
               char command[20];
-              if (lcdData == 1) { //Hotend pid autotune
-                sprintf(command, "M303 S%d E0 C1 U1", hotendTemp); //build auto pid command (extruder)
-              }
-              else if (lcdData == 2) { //Bed pid autotune
+              //if (lcdData == 1) { //Hotend pid autotune
+              sprintf(command, "M303 S%d E0 C8 U1", hotendTemp); //build auto pid command (extruder)
+              //}
+              /*else if (lcdData == 2) { //Bed pid autotune
                 sprintf(command, "M303 S%d E-1 C1 U1", bedTemp); //build auto pid command (bed)
-              }
+              }*/
               enqueue_and_echo_command((const char*)&command); //enque pid command
               opMode == OPMODE_AUTO_PID;
               tempGraphUpdate = 2;
+
             }
           }
           break;
