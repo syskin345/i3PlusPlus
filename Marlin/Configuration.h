@@ -332,7 +332,7 @@
 // If your configuration is significantly different than this and you don't understand the issues involved, you probably
 // shouldn't use bed PID until someone else verifies your hardware works.
 // If this is enabled, find your own PID constants below.
-#define PIDTEMPBED
+//#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -477,7 +477,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 81, 81, 400.5, 94.3 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 94.3 }
 
 /**
  * Default Max Feed Rate (mm/s)

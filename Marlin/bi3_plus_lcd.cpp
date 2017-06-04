@@ -59,35 +59,14 @@ void executeLoopedOperation(millis_t ms) {
         nextOpTime = ms + 200;
     }
     else if (opMode == OPMODE_UNLOAD_FILAMENT) {
-      if (thermalManager.current_temperature[0] >= 190)
+      if (thermalManager.current_temperature[0] >= thermalManager.target_temperature[0] -10)
         enqueue_and_echo_commands_P(PSTR("G1 E-0.5 F60"));
       nextOpTime = ms + 500;
     }
     else if (opMode == OPMODE_LOAD_FILAMENT) {
-      if (thermalManager.current_temperature[0] >= 190)
+      if (thermalManager.current_temperature[0] >= thermalManager.target_temperature[0] -10)
         enqueue_and_echo_commands_P(PSTR("G1 E0.5 F60"));
       nextOpTime = ms + 500;
-    }
-    else if (opMode == OPMODE_MOVE) {
-      if (eventCnt == 0) {
-        quickstop_stepper();
-        clear_command_queue();
-        opMode = OPMODE_NONE;
-      }
-      else {
-        eventCnt = 0;
-        nextOpTime = ms + 250;
-      }
-    }
-    else if (opMode == OPMODE_AUTO_PID) {
-      if (get_command_queue_count == 0) {
-        lcdShowPage(66);
-        opMode = OPMODE_NONE;
-      }
-      else {
-        nextOpTime = ms + 200;
-        Serial.println(get_command_queue_count());
-      }
     }
   }
 }
@@ -239,8 +218,7 @@ void readLcdSerial() {
                 Serial2.write(lcdBuff, 26);
               }
 
-              if (lcdData == 0)
-                lcdShowPage(31); //show sd card menu
+              lcdShowPage(31); //show sd card menu
             }
           }
           break;
@@ -361,7 +339,7 @@ void readLcdSerial() {
             settings.save();
             char command[20];
             if (lcdData == 1) {
-              thermalManager.setTargetHotend(planner.preheat_preset1_hotend, 0);
+              //thermalManager.setTargetHotend(planner.preheat_preset1_hotend, 0);
               //Serial.println(thermalManager.target_temperature[0]);
               sprintf(command, "M104 S%d", planner.preheat_preset1_hotend); //build heat up command (extruder)
               enqueue_and_echo_command((const char*)&command); //enque heat command
@@ -519,24 +497,11 @@ void readLcdSerial() {
           if ((bytesRead == 15) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
             flow_percentage[0] = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
             thermalManager.setTargetHotend((uint16_t)lcdBuff[9] * 255 + lcdBuff[10], 0);
+
             thermalManager.setTargetBed(lcdBuff[12]);
             fanSpeeds[0] = (uint16_t)lcdBuff[14] * 255 / 100;
             lcdShowPage(33);// show print menu
           }
-          break;
-        }
-      case 0x48: {//load filament OK
-          thermalManager.setTargetHotend(200, 0);
-          enqueue_and_echo_commands_P(PSTR("G91")); // relative mode
-          nextOpTime = millis() + 500;
-          opMode = OPMODE_LOAD_FILAMENT;
-          break;
-        }
-      case 0x49: {//unload filament OK
-          thermalManager.setTargetHotend(200, 0);
-          enqueue_and_echo_commands_P(PSTR("G91")); // relative mode
-          nextOpTime = millis() + 500;
-          opMode = OPMODE_UNLOAD_FILAMENT;
           break;
         }
       case 0x4A: {//load/unload filament back OK
@@ -582,80 +547,135 @@ void readLcdSerial() {
           }
           break;
         }
+
+      case 0x51: { //load_unload_menu
+
+        if (lcdData == 0) {
+          //writing default temp to lcd
+          lcdBuff[0] = 0x5A;
+          lcdBuff[1] = 0xA5;
+          lcdBuff[2] = 0x05; //data length
+          lcdBuff[3] = 0x82; //write data to sram
+          lcdBuff[4] = 0x05; //starting at 0x0500 vp
+          lcdBuff[5] = 0x20;
+          lcdBuff[6] = 0x00;
+          lcdBuff[7] = 0xC8; //extruder temp (200)
+          Serial2.write(lcdBuff, 8);
+
+          lcdShowPage(49);//open load/unbload_menu
+        }
+        else if (lcdData == 1 || lcdData == 2) {
+          //read bed/hotend temp
+
+          lcdBuff[0] = 0x5A;
+          lcdBuff[1] = 0xA5;
+          lcdBuff[2] = 0x04; //data length
+          lcdBuff[3] = 0x83; //read sram
+          lcdBuff[4] = 0x05; //vp 0520
+          lcdBuff[5] = 0x20;
+          lcdBuff[6] = 0x01; //length
+
+          Serial2.write(lcdBuff, 7);
+
+          //read user entered values from sram
+          uint8_t bytesRead = Serial2.readBytes(lcdBuff, 9);
+          if ((bytesRead == 9) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
+            int16_t hotendTemp = (int16_t)lcdBuff[7] * 255 + lcdBuff[8];
+            Serial.println(hotendTemp);
+            char command[20];
+            thermalManager.setTargetHotend(hotendTemp, 0);
+            sprintf(command, "M104 S%d", hotendTemp); //build auto pid command (extruder)
+            //enqueue_and_echo_command((const char*)&command); //enque pid command
+            enqueue_and_echo_commands_P(PSTR("G91")); // relative mode
+            nextOpTime = millis() + 500;
+            if (lcdData == 1) {
+              opMode = OPMODE_LOAD_FILAMENT;
+            }
+            else if (lcdData == 2) {
+              opMode = OPMODE_UNLOAD_FILAMENT;
+            }
+          }
+        }
+        break;
+      }
       case 0x00: {
-          if (opMode == OPMODE_MOVE)
-            eventCnt++;
-          else { 
-            if (!axis_homed[X_AXIS])
-              enqueue_and_echo_commands_P(PSTR("G28 X0"));
-            else {
-              enqueue_and_echo_commands_P(PSTR("G90"));
-              enqueue_and_echo_commands_P(PSTR("G1 X200 F3000"));
-              nextOpTime = millis() + 250;
-              opMode = OPMODE_MOVE;
-            }
-          }
-          break;
+        if (!axis_homed[X_AXIS]) {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G28 X0"));
         }
-      case 0x01: {
-          if (opMode == OPMODE_MOVE)
-            eventCnt++;
-          else {                        
-            if (!axis_homed[X_AXIS])
-              enqueue_and_echo_commands_P(PSTR("G28 X0"));
-            else {
-              enqueue_and_echo_commands_P(PSTR("G90"));
-              enqueue_and_echo_commands_P(PSTR("G1 X0 F3000"));
-              nextOpTime = millis() + 250;
-              opMode = OPMODE_MOVE;
-            }
-          }
-          break;
+        else {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G91"));
+          enqueue_and_echo_commands_P(PSTR("G1 X5 F3000"));
+          enqueue_and_echo_commands_P(PSTR("G90"));
         }
+        break;
+      }
+      case 0x01: {                 
+        if (!axis_homed[X_AXIS]) {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G28 X0"));
+        }
+        else {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G91"));
+          enqueue_and_echo_commands_P(PSTR("G1 X-5 F3000"));
+          enqueue_and_echo_commands_P(PSTR("G90"));
+        }
+        break;
+      }
       case 0x02: {
-          if (!axis_homed[Y_AXIS])
-            enqueue_and_echo_commands_P(PSTR("G28 Y0"));
-          else {
-            clear_command_queue();
-            enqueue_and_echo_commands_P(PSTR("G91"));
-            enqueue_and_echo_commands_P(PSTR("G1 Y5 F3000"));
-            enqueue_and_echo_commands_P(PSTR("G90"));
-          }
-          break;
+        if (!axis_homed[Y_AXIS]) {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G28 Y0"));
         }
+        else {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G91"));
+          enqueue_and_echo_commands_P(PSTR("G1 Y5 F3000"));
+          enqueue_and_echo_commands_P(PSTR("G90"));
+        }
+        break;
+      }
       case 0x03: {
-          if (!axis_homed[Y_AXIS])
-            enqueue_and_echo_commands_P(PSTR("G28 Y0"));
-          else {
-            clear_command_queue();
-            enqueue_and_echo_commands_P(PSTR("G91"));
-            enqueue_and_echo_commands_P(PSTR("G1 Y-5 F3000"));
-            enqueue_and_echo_commands_P(PSTR("G90"));
+        if (!axis_homed[Y_AXIS]) {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G28 Y0"));
           }
-          break;
+        else {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G91"));
+          enqueue_and_echo_commands_P(PSTR("G1 Y-5 F3000"));
+          enqueue_and_echo_commands_P(PSTR("G90"));
         }
+        break;
+      }
       case 0x04: {
-          if (!axis_homed[Z_AXIS])
-            enqueue_and_echo_commands_P(PSTR("G28 Z0"));
-          else {
-            clear_command_queue();
-            enqueue_and_echo_commands_P(PSTR("G91"));
-            enqueue_and_echo_commands_P(PSTR("G1 Z0.5 F3000"));
-            enqueue_and_echo_commands_P(PSTR("G90"));
-          }
-          break;
+        if (!axis_homed[Z_AXIS]) {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G28 Z0"));
         }
+        else {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G91"));
+          enqueue_and_echo_commands_P(PSTR("G1 Z0.5 F3000"));
+          enqueue_and_echo_commands_P(PSTR("G90"));
+        }
+        break;
+      }
       case 0x05: {
-          if (!axis_homed[Z_AXIS])
-            enqueue_and_echo_commands_P(PSTR("G28 Z0"));
-          else {
-            clear_command_queue();
-            enqueue_and_echo_commands_P(PSTR("G91"));
-            enqueue_and_echo_commands_P(PSTR("G1 Z-0.5 F3000"));
-            enqueue_and_echo_commands_P(PSTR("G90"));
-          }
-          break;
+        if (!axis_homed[Z_AXIS]) {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G28 Z0"));
         }
+        else {
+          clear_command_queue();
+          enqueue_and_echo_commands_P(PSTR("G91"));
+          enqueue_and_echo_commands_P(PSTR("G1 Z-0.5 F3000"));
+          enqueue_and_echo_commands_P(PSTR("G90"));
+        }
+        break;
+      }
       case 0x06: {
           if (thermalManager.degHotend(0) >= 180) {
             clear_command_queue();
@@ -708,19 +728,17 @@ void readLcdSerial() {
             //writing default temp to lcd
             lcdBuff[0] = 0x5A;
             lcdBuff[1] = 0xA5;
-            lcdBuff[2] = 0x07; //data length
+            lcdBuff[2] = 0x05; //data length
             lcdBuff[3] = 0x82; //write data to sram
             lcdBuff[4] = 0x05; //starting at 0x0500 vp
             lcdBuff[5] = 0x20;
             lcdBuff[6] = 0x00;
             lcdBuff[7] = 0xC8; //extruder temp (200)
-            lcdBuff[8] = 0x00;
-            lcdBuff[9] = 0x32; //bed temp (50)
-            Serial2.write(lcdBuff, 10);
+            Serial2.write(lcdBuff, 8);
 
             lcdShowPage(61);//open auto pid screen
           }
-          else if (lcdData == 1 || lcdData == 2) { //auto pid start button pressed (1=hotend,2=bed)
+          else if (lcdData == 1) { //auto pid start button pressed (1=hotend,2=bed)
             //read bed/hotend temp
 
             lcdBuff[0] = 0x5A;
@@ -729,28 +747,20 @@ void readLcdSerial() {
             lcdBuff[3] = 0x83; //read sram
             lcdBuff[4] = 0x05; //vp 0520
             lcdBuff[5] = 0x20;
-            lcdBuff[6] = 0x02; //length
+            lcdBuff[6] = 0x01; //length
 
             Serial2.write(lcdBuff, 7);
 
             //read user entered values from sram
-            uint8_t bytesRead = Serial2.readBytes(lcdBuff, 11);
+            uint8_t bytesRead = Serial2.readBytes(lcdBuff, 9);
             if ((bytesRead == 11) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
               uint16_t hotendTemp = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
-              uint16_t bedTemp = (uint16_t)lcdBuff[9] * 255 + lcdBuff[10];
               //Serial.println(hotendTemp);
-              //Serial.println(bedTemp);
               char command[20];
-              //if (lcdData == 1) { //Hotend pid autotune
               sprintf(command, "M303 S%d E0 C8 U1", hotendTemp); //build auto pid command (extruder)
-              //}
-              /*else if (lcdData == 2) { //Bed pid autotune
-                sprintf(command, "M303 S%d E-1 C1 U1", bedTemp); //build auto pid command (bed)
-              }*/
+              enqueue_and_echo_command("M106 S255"); //Turn on fan
               enqueue_and_echo_command((const char*)&command); //enque pid command
-              opMode == OPMODE_AUTO_PID;
               tempGraphUpdate = 2;
-
             }
           }
           break;

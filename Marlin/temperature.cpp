@@ -455,6 +455,7 @@ uint8_t Temperature::soft_pwm[HOTENDS];
           #endif
         }
         lcdShowPage(66);
+        enqueue_and_echo_command("M106 S0");
         return;
       }
       lcd_update();
