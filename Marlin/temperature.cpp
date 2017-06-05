@@ -808,9 +808,7 @@ void Temperature::manage_heater() {
   #if TEMP_SENSOR_BED != 0
 
     #if HAS_THERMALLY_PROTECTED_BED
-      thermal_runaway_protection(&thermal_runaway_bed_state_machine, &thermal_runaway_bed_timer, current_temperature_bed, target_temperature_bed, -1, 
-        
-_PERIOD, THERMAL_PROTECTION_BED_HYSTERESIS);
+      thermal_runaway_protection(&thermal_runaway_bed_state_machine, &thermal_runaway_bed_timer, current_temperature_bed, target_temperature_bed, -1, THERMAL_PROTECTION_BED_PERIOD, THERMAL_PROTECTION_BED_HYSTERESIS);
     #endif
 
     #if ENABLED(PIDTEMPBED)
