@@ -60,12 +60,12 @@ void executeLoopedOperation(millis_t ms) {
     }
     else if (opMode == OPMODE_UNLOAD_FILAMENT) {
       if (thermalManager.current_temperature[0] >= thermalManager.target_temperature[0] -10)
-        enqueue_and_echo_commands_P(PSTR("G1 E-0.5 F60"));
+        enqueue_and_echo_commands_P(PSTR("G1 E-1 F120"));
       nextOpTime = ms + 500;
     }
     else if (opMode == OPMODE_LOAD_FILAMENT) {
       if (thermalManager.current_temperature[0] >= thermalManager.target_temperature[0] -10)
-        enqueue_and_echo_commands_P(PSTR("G1 E0.5 F60"));
+        enqueue_and_echo_commands_P(PSTR("G1 E1 F120"));
       nextOpTime = ms + 500;
     }
   }
@@ -562,7 +562,7 @@ void readLcdSerial() {
           lcdBuff[7] = 0xC8; //extruder temp (200)
           Serial2.write(lcdBuff, 8);
 
-          lcdShowPage(49);//open load/unbload_menu
+          lcdShowPage(49);//open load/unload_menu
         }
         else if (lcdData == 1 || lcdData == 2) {
           //read bed/hotend temp
@@ -680,7 +680,7 @@ void readLcdSerial() {
           if (thermalManager.degHotend(0) >= 180) {
             clear_command_queue();
             enqueue_and_echo_commands_P(PSTR("G91"));
-            enqueue_and_echo_commands_P(PSTR("G1 E5 F60"));
+            enqueue_and_echo_commands_P(PSTR("G1 E1 F120"));
             enqueue_and_echo_commands_P(PSTR("G90"));
           }
           break;
@@ -689,7 +689,7 @@ void readLcdSerial() {
           if (thermalManager.degHotend(0) >= 180) {
             clear_command_queue();
             enqueue_and_echo_commands_P(PSTR("G91"));
-            enqueue_and_echo_commands_P(PSTR("G1 E-5 F60"));
+            enqueue_and_echo_commands_P(PSTR("G1 E-1 F120"));
             enqueue_and_echo_commands_P(PSTR("G90"));
           }
           break;
@@ -753,7 +753,7 @@ void readLcdSerial() {
 
             //read user entered values from sram
             uint8_t bytesRead = Serial2.readBytes(lcdBuff, 9);
-            if ((bytesRead == 11) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
+            if ((bytesRead == 9) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
               uint16_t hotendTemp = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
               //Serial.println(hotendTemp);
               char command[20];
@@ -808,58 +808,59 @@ void lcdSendMarlinVersion() {
 }
 
 void lcdSendStats() {
+  Serial.println("Test123456789ABCDEF");
   char buffer[21];
   duration_t elapsed;
 
-	printStatistics stats = print_job_timer.getStats();
-	lcdBuff[0] = 0x5A;
-	lcdBuff[1] = 0xA5;
-	lcdBuff[2] = 0x07;//data length
-	lcdBuff[3] = 0x82;//write data to sram
-	lcdBuff[4] = 0x05; //starting at 0x5040 vp
-	lcdBuff[5] = 0x40;
-	//Total prints (including aborted)
-	lcdBuff[6] = highByte((int16_t)stats.totalPrints);
-	lcdBuff[7] = lowByte((int16_t)stats.totalPrints);
-	//Finished prints
-	lcdBuff[8] = highByte((int16_t)stats.finishedPrints);
-	lcdBuff[9] = lowByte((int16_t)stats.finishedPrints);
+  printStatistics stats = print_job_timer.getStats();
+  lcdBuff[0] = 0x5A;
+  lcdBuff[1] = 0xA5;
+  lcdBuff[2] = 0x07;//data length
+  lcdBuff[3] = 0x82;//write data to sram
+  lcdBuff[4] = 0x05; //starting at 0x5040 vp
+  lcdBuff[5] = 0x40;
+  //Total prints (including aborted)
+  lcdBuff[6] = highByte((int16_t)stats.totalPrints);
+  lcdBuff[7] = lowByte((int16_t)stats.totalPrints);
+  //Finished prints
+  lcdBuff[8] = highByte((int16_t)stats.finishedPrints);
+  lcdBuff[9] = lowByte((int16_t)stats.finishedPrints);
   Serial2.write(lcdBuff, 10);
 
   //total print time
   lcdBuff[0] = 0x5A;
   lcdBuff[1] = 0xA5;
-  lcdBuff[2] = 0x18; //data length
+  lcdBuff[2] = 0x12; //data length
   lcdBuff[3] = 0x82; //write data to sram
   lcdBuff[4] = 0x05; //starting at 0x0542 vp
   lcdBuff[5] = 0x42;
   elapsed = stats.printTime;
   elapsed.toString(buffer);
-  strncpy((char*)lcdBuff + 6, buffer, 21);
-  Serial2.write(lcdBuff, 27);
+  strncpy((char*)lcdBuff + 6, buffer,15);
+  Serial2.write(lcdBuff, 21);
 
   //longest print time
   lcdBuff[0] = 0x5A;
   lcdBuff[1] = 0xA5;
-  lcdBuff[2] = 0x18; //data length
+  lcdBuff[2] = 0x12; //data length
   lcdBuff[3] = 0x82; //write data to sram
   lcdBuff[4] = 0x05; //starting at 0x054D vp
   lcdBuff[5] = 0x4D;
   elapsed = stats.longestPrint;
   elapsed.toString(buffer);
-  strncpy((char*)lcdBuff + 6, buffer, 21);
-  Serial2.write(lcdBuff, 27);
+  strncpy((char*)lcdBuff + 6, buffer, 15);
+  Serial2.write(lcdBuff, 21);
 
   //total filament used
   lcdBuff[0] = 0x5A;
   lcdBuff[1] = 0xA5;
-  lcdBuff[2] = 0x18; //data length
+  lcdBuff[2] = 0x12; //data length
   lcdBuff[3] = 0x82; //write data to sram
   lcdBuff[4] = 0x05; //starting at 0x0558 vp
   lcdBuff[5] = 0x58;
   sprintf_P(buffer, PSTR("%ld.%im"), long(stats.filamentUsed / 1000), int(stats.filamentUsed / 100) % 10);
-  strncpy((char*)lcdBuff + 6, buffer, 21);
-  Serial2.write(lcdBuff, 27);
+  strncpy((char*)lcdBuff + 6, buffer, 15);
+  Serial2.write(lcdBuff, 21);
 
 }
 

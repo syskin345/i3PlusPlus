@@ -54,3 +54,4 @@ SPADDRESS=5000
 65=065_auto_pid_graph.bmp
 66=066_pid_finished.bmp
 67=067_pid_finished_pressed.bmp
+68=068_thermal_runaway.bmp

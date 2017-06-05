@@ -741,6 +741,7 @@ void Temperature::manage_heater() {
         // Has it failed to increase enough?
         if (degHotend(e) < watch_target_temp[e]) {
           // Stop!
+          lcdShowPage(68);
           _temp_error(e, PSTR(MSG_T_HEATING_FAILED), PSTR(MSG_HEATING_FAILED_LCD));
         }
         else {
@@ -759,6 +760,7 @@ void Temperature::manage_heater() {
         // Has it failed to increase enough?
         if (degBed() < watch_target_bed_temp) {
           // Stop!
+          lcdShowPage(68);
           _temp_error(-1, PSTR(MSG_T_HEATING_FAILED), PSTR(MSG_HEATING_FAILED_LCD));
         }
         else {
@@ -806,7 +808,9 @@ void Temperature::manage_heater() {
   #if TEMP_SENSOR_BED != 0
 
     #if HAS_THERMALLY_PROTECTED_BED
-      thermal_runaway_protection(&thermal_runaway_bed_state_machine, &thermal_runaway_bed_timer, current_temperature_bed, target_temperature_bed, -1, THERMAL_PROTECTION_BED_PERIOD, THERMAL_PROTECTION_BED_HYSTERESIS);
+      thermal_runaway_protection(&thermal_runaway_bed_state_machine, &thermal_runaway_bed_timer, current_temperature_bed, target_temperature_bed, -1, 
+        
+_PERIOD, THERMAL_PROTECTION_BED_HYSTERESIS);
     #endif
 
     #if ENABLED(PIDTEMPBED)
@@ -1312,6 +1316,7 @@ void Temperature::init() {
         else if (PENDING(millis(), *timer)) break;
         *state = TRRunaway;
       case TRRunaway:
+        lcdShowPage(68);
         _temp_error(heater_id, PSTR(MSG_T_THERMAL_RUNAWAY), PSTR(MSG_THERMAL_RUNAWAY));
     }
   }
