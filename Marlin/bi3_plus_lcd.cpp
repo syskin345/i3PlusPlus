@@ -495,7 +495,7 @@ void readLcdSerial() {
 
           uint8_t bytesRead = Serial2.readBytes(lcdBuff, 15);
           if ((bytesRead == 15) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
-            flow_percentage[0] = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
+            feedrate_percentage = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
             thermalManager.setTargetHotend((uint16_t)lcdBuff[9] * 255 + lcdBuff[10], 0);
 
             thermalManager.setTargetBed(lcdBuff[12]);
@@ -771,12 +771,15 @@ void readLcdSerial() {
           Serial.println(lastPage);
           lcdShowPage(lastPage);
         }
-        else {
+        else { 
           lastPage = lcdgetCurrentPage();
           Serial.println(lastPage);
           tempGraphUpdate = 2;
           lcdShowPage(63);
         }
+      }
+      case 0x55: { //enter print menu without selecting file
+        tempGraphUpdate = 2;
       }
       /*case 0xFF: {
           lcdShowPage(58); //enable lcd bridge mode
