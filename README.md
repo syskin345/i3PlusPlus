@@ -1,5 +1,7 @@
 Info here: https://silverquark.github.io/i3PlusPlusSite/
 
+![Screenshot](http://i.imgur.com/KTvwPuP.jpg)
+
 # Usefull development links:
 
 Marlin changes for LCD:
