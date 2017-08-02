@@ -599,81 +599,51 @@ void readLcdSerial() {
         break;
       }
       case 0x00: {
-        if (!axis_homed[X_AXIS]) {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G28 X0"));
-        }
-        else {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G91"));
-          enqueue_and_echo_commands_P(PSTR("G1 X5 F3000"));
-          enqueue_and_echo_commands_P(PSTR("G90"));
-        }
+        clear_command_queue();
+        enqueue_and_echo_commands_P(PSTR("G91"));
+        enqueue_and_echo_commands_P(PSTR("G1 X5 F3000"));
+        enqueue_and_echo_commands_P(PSTR("G90"));
+
         break;
       }
-      case 0x01: {                 
-        if (!axis_homed[X_AXIS]) {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G28 X0"));
-        }
-        else {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G91"));
-          enqueue_and_echo_commands_P(PSTR("G1 X-5 F3000"));
-          enqueue_and_echo_commands_P(PSTR("G90"));
-        }
+      case 0x01: {
+        clear_command_queue();
+        enqueue_and_echo_commands_P(PSTR("G91"));
+        enqueue_and_echo_commands_P(PSTR("G1 X-5 F3000"));
+        enqueue_and_echo_commands_P(PSTR("G90"));
+
         break;
       }
       case 0x02: {
-        if (!axis_homed[Y_AXIS]) {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G28 Y0"));
-        }
-        else {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G91"));
-          enqueue_and_echo_commands_P(PSTR("G1 Y5 F3000"));
-          enqueue_and_echo_commands_P(PSTR("G90"));
-        }
+        clear_command_queue();
+        enqueue_and_echo_commands_P(PSTR("G91"));
+        enqueue_and_echo_commands_P(PSTR("G1 Y5 F3000"));
+        enqueue_and_echo_commands_P(PSTR("G90"));
+		  
         break;
       }
       case 0x03: {
-        if (!axis_homed[Y_AXIS]) {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G28 Y0"));
-          }
-        else {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G91"));
-          enqueue_and_echo_commands_P(PSTR("G1 Y-5 F3000"));
-          enqueue_and_echo_commands_P(PSTR("G90"));
-        }
+        clear_command_queue();
+        enqueue_and_echo_commands_P(PSTR("G91"));
+        enqueue_and_echo_commands_P(PSTR("G1 Y-5 F3000"));
+        enqueue_and_echo_commands_P(PSTR("G90"));
+		
         break;
       }
       case 0x04: {
-        if (!axis_homed[Z_AXIS]) {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G28 Z0"));
-        }
-        else {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G91"));
-          enqueue_and_echo_commands_P(PSTR("G1 Z0.5 F3000"));
-          enqueue_and_echo_commands_P(PSTR("G90"));
-        }
+        clear_command_queue();
+        enqueue_and_echo_commands_P(PSTR("G91"));
+        enqueue_and_echo_commands_P(PSTR("G1 Z0.5 F3000"));
+        enqueue_and_echo_commands_P(PSTR("G90"));
+        
         break;
       }
       case 0x05: {
-        if (!axis_homed[Z_AXIS]) {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G28 Z0"));
-        }
-        else {
-          clear_command_queue();
-          enqueue_and_echo_commands_P(PSTR("G91"));
-          enqueue_and_echo_commands_P(PSTR("G1 Z-0.5 F3000"));
-          enqueue_and_echo_commands_P(PSTR("G90"));
-        }
+        clear_command_queue();
+        enqueue_and_echo_commands_P(PSTR("G91"));
+        enqueue_and_echo_commands_P(PSTR("G1 Z-0.5 F3000"));
+        enqueue_and_echo_commands_P(PSTR("G90"));
+        
         break;
       }
       case 0x06: {

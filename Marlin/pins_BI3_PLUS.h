@@ -53,6 +53,7 @@
 #define Z_STEP_PIN         67
 #define Z_DIR_PIN          69
 #define Z_ENABLE_PIN       66
+#define Z_MIN_PROBE_PIN    25
 
 #define E0_STEP_PIN        58
 #define E0_DIR_PIN         59
