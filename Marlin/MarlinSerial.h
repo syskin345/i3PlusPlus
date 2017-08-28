@@ -164,7 +164,7 @@
 
   extern MarlinSerial customizedSerial;
 
-#endif // !USBCON
+#endif // !(USBCON || ARDUINO_SERIAL)
 
 // Use the UART for Bluetooth in AT90USB configurations
 #if defined(USBCON) && ENABLED(BLUETOOTH)

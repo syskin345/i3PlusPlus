@@ -320,7 +320,8 @@
           // space for us.
           if (TEST(M_UCSRxA, M_UDREx))
             _tx_udr_empty_irq();
-        } else {
+        }
+        else {
           // nop, the interrupt handler will free up space for us
         }
       }
@@ -508,7 +509,7 @@
   // Preinstantiate
   MarlinSerial customizedSerial;
 
-#endif // !USBCON && (UBRRH || UBRR0H || UBRR1H || UBRR2H || UBRR3H)
+#endif // !(USBCON || ARDUINO_SERIAL) && (UBRRH || UBRR0H || UBRR1H || UBRR2H || UBRR3H)
 
 // For AT90USB targets use the UART for BT interfacing
 #if defined(USBCON) && ENABLED(BLUETOOTH)

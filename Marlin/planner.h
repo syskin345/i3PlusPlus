@@ -149,6 +149,9 @@ class Planner {
                  axis_steps_per_mm[XYZE_N],
                  steps_to_mm[XYZE_N];
 
+    //
+    // i3++
+    //
     int16_t preheat_preset1_hotend;
     int16_t preheat_preset2_hotend;
     int16_t preheat_preset3_hotend;
@@ -156,7 +159,7 @@ class Planner {
     int8_t preheat_preset1_bed;
     int8_t preheat_preset2_bed;
     int8_t preheat_preset3_bed;
-
+    
     static uint32_t max_acceleration_steps_per_s2[XYZE_N],
                     max_acceleration_mm_per_s2[XYZE_N]; // Use M201 to override by software
 
@@ -169,8 +172,10 @@ class Planner {
                  min_travel_feedrate_mm_s;
 
     #if HAS_ABL
-      static bool abl_enabled;            // Flag that bed leveling is enabled
-      static matrix_3x3 bed_level_matrix; // Transform to compensate for bed level
+      static bool abl_enabled;              // Flag that bed leveling is enabled
+      #if ABL_PLANAR
+        static matrix_3x3 bed_level_matrix; // Transform to compensate for bed level
+      #endif
     #endif
 
     #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
@@ -461,7 +466,7 @@ class Planner {
      * 'distance'.
      */
     static float max_allowable_speed(const float &accel, const float &target_velocity, const float &distance) {
-      return sqrt(sq(target_velocity) - 2 * accel * distance);
+      return SQRT(sq(target_velocity) - 2 * accel * distance);
     }
 
     static void calculate_trapezoid_for_block(block_t* const block, const float &entry_factor, const float &exit_factor);
