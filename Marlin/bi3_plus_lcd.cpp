@@ -97,7 +97,7 @@ void lcdStatusUpdate(millis_t ms) {
     lcdBuff[13] = thermalManager.degBed();
 
     lcdBuff[14] = 0x00; //0x04 fan speed
-    lcdBuff[15] = (int16_t)fanSpeeds[0] * 100 / 255;
+    lcdBuff[15] = (int16_t)fanSpeeds[0] * 100 / 256;
 
     lcdBuff[16] = 0x00;//0x05 card progress
     lcdBuff[17] = card.percentDone();
@@ -332,11 +332,11 @@ void readLcdSerial() {
             //read user entered values from sram
             uint8_t bytesRead = Serial2.readBytes(lcdBuff, 19);
             if ((bytesRead == 19) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
-              planner.preheat_preset1_hotend = (int16_t)lcdBuff[7] * 255 + lcdBuff[8];
+              planner.preheat_preset1_hotend = (int16_t)lcdBuff[7] * 256 + lcdBuff[8];
               planner.preheat_preset1_bed = (int8_t)lcdBuff[10];
-              planner.preheat_preset2_hotend = (int16_t)lcdBuff[11] * 255 + lcdBuff[12];
+              planner.preheat_preset2_hotend = (int16_t)lcdBuff[11] * 256 + lcdBuff[12];
               planner.preheat_preset2_bed = (int8_t)lcdBuff[14];
-              planner.preheat_preset3_hotend = (int16_t)lcdBuff[15] * 255 + lcdBuff[16];
+              planner.preheat_preset3_hotend = (int16_t)lcdBuff[15] * 256 + lcdBuff[16];
               planner.preheat_preset3_bed = (int8_t)lcdBuff[18];
               enqueue_and_echo_commands_P(PSTR("M500"));
               char command[20];
@@ -429,18 +429,18 @@ void readLcdSerial() {
 
           uint8_t bytesRead = Serial2.readBytes(lcdBuff, 21);
           if ((bytesRead == 21) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
-            planner.axis_steps_per_mm[X_AXIS] = (float)((uint16_t)lcdBuff[7] * 255 + lcdBuff[8]) / 10;
+            planner.axis_steps_per_mm[X_AXIS] = (float)((uint16_t)lcdBuff[7] * 256 + lcdBuff[8]) / 10;
             //Serial.println(lcdBuff[7]);
             //Serial.println(lcdBuff[8]);
             //Serial.println(lcdBuff[9]);
             //Serial.println(lcdBuff[10]);
-            planner.axis_steps_per_mm[Y_AXIS] = (float)((uint16_t)lcdBuff[9] * 255 + lcdBuff[10]) / 10;
-            planner.axis_steps_per_mm[Z_AXIS] = (float)((uint16_t)lcdBuff[11] * 255 + lcdBuff[12]) / 10;
-            planner.axis_steps_per_mm[E_AXIS] = (float)((uint16_t)lcdBuff[13] * 255 + lcdBuff[14]) / 10;
+            planner.axis_steps_per_mm[Y_AXIS] = (float)((uint16_t)lcdBuff[9] * 256 + lcdBuff[10]) / 10;
+            planner.axis_steps_per_mm[Z_AXIS] = (float)((uint16_t)lcdBuff[11] * 256 + lcdBuff[12]) / 10;
+            planner.axis_steps_per_mm[E_AXIS] = (float)((uint16_t)lcdBuff[13] * 256 + lcdBuff[14]) / 10;
 
-            PID_PARAM(Kp, 0) = (float)((uint16_t)lcdBuff[15] * 255 + lcdBuff[16]) / 10;
-            PID_PARAM(Ki, 0) = scalePID_i((float)((uint16_t)lcdBuff[17] * 255 + lcdBuff[18]) / 10);
-            PID_PARAM(Kd, 0) = scalePID_d((float)((uint16_t)lcdBuff[19] * 255 + lcdBuff[20]) / 10);
+            PID_PARAM(Kp, 0) = (float)((uint16_t)lcdBuff[15] * 256 + lcdBuff[16]) / 10;
+            PID_PARAM(Ki, 0) = scalePID_i((float)((uint16_t)lcdBuff[17] * 256 + lcdBuff[18]) / 10);
+            PID_PARAM(Kd, 0) = scalePID_d((float)((uint16_t)lcdBuff[19] * 256 + lcdBuff[20]) / 10);
 
             enqueue_and_echo_commands_P(PSTR("M500"));
             lcdShowPage(43);//show system menu
@@ -463,8 +463,8 @@ void readLcdSerial() {
           lcdBuff[4] = 0x03;
           lcdBuff[5] = 0x2B;
 
-          lcdBuff[6] = highByte(flow_percentage[0]); //0x2B
-          lcdBuff[7] = lowByte(flow_percentage[0]);
+          lcdBuff[6] = highByte(feedrate_percentage); //0x2B
+          lcdBuff[7] = lowByte(feedrate_percentage);
 
           int temp = thermalManager.degTargetHotend(0);
           lcdBuff[8] = highByte(temp); //0x2C
@@ -474,7 +474,7 @@ void readLcdSerial() {
           lcdBuff[11] = (int)thermalManager.degTargetBed();
 
           lcdBuff[12] = 0x00;//0x2E
-          lcdBuff[13] = (uint16_t)fanSpeeds[0] * 100 / 255;
+          lcdBuff[13] = (uint16_t)fanSpeeds[0] * 100 / 256;
 
           Serial2.write(lcdBuff, 14);
 
@@ -498,11 +498,11 @@ void readLcdSerial() {
 
           uint8_t bytesRead = Serial2.readBytes(lcdBuff, 15);
           if ((bytesRead == 15) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
-            feedrate_percentage = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
-            thermalManager.setTargetHotend((uint16_t)lcdBuff[9] * 255 + lcdBuff[10], 0);
+            feedrate_percentage = (uint16_t)lcdBuff[7] * 256 + lcdBuff[8];
+            thermalManager.setTargetHotend((uint16_t)lcdBuff[9] * 256 + lcdBuff[10], 0);
 
             thermalManager.setTargetBed(lcdBuff[12]);
-            fanSpeeds[0] = (uint16_t)lcdBuff[14] * 255 / 100;
+            fanSpeeds[0] = (uint16_t)lcdBuff[14] * 256 / 100;
             lcdShowPage(33);// show print menu
           }
           break;
@@ -588,7 +588,7 @@ void readLcdSerial() {
             //read user entered values from sram
             uint8_t bytesRead = Serial2.readBytes(lcdBuff, 9);
             if ((bytesRead == 9) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
-              int16_t hotendTemp = (int16_t)lcdBuff[7] * 255 + lcdBuff[8];
+              int16_t hotendTemp = (int16_t)lcdBuff[7] * 256 + lcdBuff[8];
               Serial.println(hotendTemp);
               char command[20];
               thermalManager.setTargetHotend(hotendTemp, 0);
@@ -731,7 +731,7 @@ void readLcdSerial() {
             //read user entered values from sram
             uint8_t bytesRead = Serial2.readBytes(lcdBuff, 9);
             if ((bytesRead == 9) && (lcdBuff[0] == 0x5A) && (lcdBuff[1] == 0xA5)) {
-              uint16_t hotendTemp = (uint16_t)lcdBuff[7] * 255 + lcdBuff[8];
+              uint16_t hotendTemp = (uint16_t)lcdBuff[7] * 256 + lcdBuff[8];
               //Serial.println(hotendTemp);
               char command[20];
               sprintf(command, "M303 S%d E0 C8 U1", hotendTemp); //build auto pid command (extruder)
