@@ -55,6 +55,7 @@
  * G10  - Retract filament according to settings of M207 (Requires FWRETRACT)
  * G11  - Retract recover filament according to settings of M208 (Requires FWRETRACT)
  * G12  - Clean tool (Requires NOZZLE_CLEAN_FEATURE)
+ * M16  - Expected printer check
  * G17  - Select Plane XY (Requires CNC_WORKSPACE_PLANES)
  * G18  - Select Plane ZX (Requires CNC_WORKSPACE_PLANES)
  * G19  - Select Plane YZ (Requires CNC_WORKSPACE_PLANES)
@@ -6908,6 +6909,17 @@ void report_xyz_from_stepper_position() {
 
 #endif // SPINDLE_LASER_ENABLE
 
+#if ENABLED(EXPECTED_PRINTER_CHECK)
+  /**
+  * M16: Check if the printer is the expected one. If it is not, kill the print.
+  */
+  inline void gcode_M16() {
+    if (strcmp(MACHINE_NAME, parser.string_arg) != 0) {
+      kill(PSTR(MSG_EXPECTED_PRINTER));
+    }
+  }
+#endif
+
 /**
  * M17: Enable power on all stepper motors
  */
@@ -12757,6 +12769,10 @@ void process_parsed_command() {
         case 5: gcode_M5(); break;                                // M5: Laser/Spindle OFF
       #endif
 
+      #if ENABLED(EXPECTED_PRINTER_CHECK)
+        case 16: gcode_M16(); break;                              // M16: Expected printer check
+      #endif
+      
       case 17: gcode_M17(); break;                                // M17: Enable all steppers
 
       #if ENABLED(SDSUPPORT)

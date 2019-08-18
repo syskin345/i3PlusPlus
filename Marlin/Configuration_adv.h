@@ -34,6 +34,11 @@
 #define CONFIGURATION_ADV_H
 #define CONFIGURATION_ADV_H_VERSION 010109
 
+// Enables the M16 gcode command that you can use in your start gcode to ensure
+// the gcode was sliced for the printer it is being run on. Checks a given name
+// against the MACHINE_NAME which can be set with CUSTOM_MACHINE_NAME
+#define EXPECTED_PRINTER_CHECK
+
 // @section temperature
 
 //===========================================================================

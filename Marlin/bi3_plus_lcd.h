@@ -2,8 +2,6 @@
 #define BI3PLUSLCD_H
 
 #include "Marlin.h"
-#undef USE_MARLINSERIAL
-//#include "Arduino.h" //JBOZARTH: TODO this may need to be romoved
 
 void lcdSetup();
 void lcdTask();

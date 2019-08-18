@@ -927,6 +927,9 @@
 #ifndef MSG_CASE_LIGHT_BRIGHTNESS
   #define MSG_CASE_LIGHT_BRIGHTNESS           _UxGT("Light BRIGHTNESS")
 #endif
+#ifndef MSG_EXPECTED_PRINTER
+  #define MSG_EXPECTED_PRINTER                 _UxGT("INCORRECT PRINTER")
+#endif
 #if LCD_WIDTH >= 20
   #ifndef MSG_INFO_PRINT_COUNT
     #define MSG_INFO_PRINT_COUNT              _UxGT("Print Count")
