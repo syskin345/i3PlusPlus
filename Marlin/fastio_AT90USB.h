@@ -381,13 +381,10 @@
 #define DIO47_WPORT PORTE
 #define DIO47_PWM   NULL
 #define DIO47_DDR   DDRE
-<<<<<<< HEAD
-=======
 
 #define TEENSY_E2   46
 #define TEENSY_E3   47
 
->>>>>>> upstream-marlin/1.1.x
 //-- end not supported by Teensyduino
 
 #undef PA0

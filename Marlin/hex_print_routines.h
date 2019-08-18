@@ -41,8 +41,4 @@ void print_hex_byte(const uint8_t b);
 void print_hex_word(const uint16_t w);
 void print_hex_address(const void * const w);
 
-<<<<<<< HEAD
-#endif // AUTO_BED_LEVELING_UBL || M100_FREE_MEMORY_WATCHER || DEBUG_GCODE_PARSER
-=======
->>>>>>> upstream-marlin/1.1.x
 #endif // HEX_PRINT_ROUTINES_H

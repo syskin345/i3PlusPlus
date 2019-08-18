@@ -2,25 +2,6 @@
 #
 # mfrb
 #
-<<<<<<< HEAD
-# Do "git rebase -i" against the "target" branch (RCBugFix or dev)
-#
-
-MFINFO=$(mfinfo) || exit
-IFS=' ' read -a INFO <<< "$MFINFO"
-
-if [[ ${INFO[4]} == "(no" ]]; then
-  echo "Branch is unavailable!"
-  exit 1
-fi
-
-case "$#" in
-  0 ) ;;
-  * ) echo "Usage: `basename $0`" 1>&2 ; exit 1 ;;
-esac
-
-git rebase -i ${INFO[3]}
-=======
 # Do "git rebase -i" against the "target" branch (bugfix-1.1.x, bugfix-2.0.x, or master)
 #
 
@@ -36,4 +17,3 @@ if [[ $TARG != $CURR ]]; then
   git fetch upstream
   git rebase upstream/$TARG && git rebase -i upstream/$TARG
 fi
->>>>>>> upstream-marlin/1.1.x

@@ -7,11 +7,7 @@ http://en.wikipedia.org/wiki/Steinhart-Hart_equation
 The main use is for Arduino programs that read data from the circuit board described here:
 http://reprap.org/wiki/Temperature_Sensor_v2.0
 
-<<<<<<< HEAD
-Usage: python createTemperatureLookup.py [options]
-=======
 Usage: python createTemperatureLookupMarlin.py [options]
->>>>>>> upstream-marlin/1.1.x
 
 Options:
   -h, --help        show this help
@@ -138,16 +134,6 @@ def main(argv):
     print "// Thermistor lookup table for Marlin"
     print "// ./createTemperatureLookupMarlin.py --rp=%s --t1=%s:%s --t2=%s:%s --t3=%s:%s --num-temps=%s" % (rp, t1, r1, t2, r2, t3, r3, num_temps)
     print "// Steinhart-Hart Coefficients: a=%.15g, b=%.15g, c=%.15g " % (t.c1, t.c2, t.c3)
-<<<<<<< HEAD
-    print "// Theoretical limits of termistor: %.2f to %.2f degC" % (low_bound, up_bound)
-    print
-    print "#define NUMTEMPS %s" % (len(temps))
-    print "const short temptable[NUMTEMPS][2] PROGMEM = {"
-
-    for temp in temps:
-        adc = t.adc(temp)
-        print "    { (short) (%7.2f * OVERSAMPLENR ), %4s }%s // v=%.3f\tr=%.3f\tres=%.3f degC/count" % (adc , temp, \
-=======
     print "// Theoretical limits of thermistor: %.2f to %.2f degC" % (low_bound, up_bound)
     print
     print "const short temptable[][2] PROGMEM = {"
@@ -155,7 +141,6 @@ def main(argv):
     for temp in temps:
         adc = t.adc(temp)
         print "    { OV(%7.2f), %4s }%s // v=%.3f\tr=%.3f\tres=%.3f degC/count" % (adc , temp, \
->>>>>>> upstream-marlin/1.1.x
                         ',' if temp != temps[-1] else ' ', \
                         t.voltage(adc), \
                         t.resist( adc), \

@@ -30,11 +30,7 @@ for i in range(32):
     print "  ",
     for j in range(8):
         print "{%d, %d}," % (a[8*i+j], b[8*i+j]),
-<<<<<<< HEAD
-    print 
-=======
     print
->>>>>>> upstream-marlin/1.1.x
 print "};"
 print
 
@@ -46,11 +42,7 @@ for i in range(32):
     print "  ",
     for j in range(8):
         print "{%d, %d}," % (a[8*i+j], b[8*i+j]),
-<<<<<<< HEAD
-    print 
-=======
     print
->>>>>>> upstream-marlin/1.1.x
 print "};"
 print
 
