@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+<<<<<<< HEAD
 for opt in "$@" ; do
   eval "sed -i 's/\([[:blank:]]*\)\(#define \b${opt}\b\)/\1\/\/\2/g' Marlin/Configuration.h"
+=======
+SED=$(which gsed || which sed)
+
+for opt in "$@" ; do
+  eval "${SED} -i 's/\([[:blank:]]*\)\(#define \b${opt}\b\)/\1\/\/\2/g' Marlin/Configuration.h"
+>>>>>>> upstream-marlin/1.1.x
 done
