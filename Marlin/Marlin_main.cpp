@@ -6915,6 +6915,7 @@ void report_xyz_from_stepper_position() {
   */
   inline void gcode_M16() {
     if (strcmp(MACHINE_NAME, parser.string_arg) != 0) {
+      lcdShowPage(69);
       kill(PSTR(MSG_EXPECTED_PRINTER));
     }
   }
@@ -12772,7 +12773,7 @@ void process_parsed_command() {
       #if ENABLED(EXPECTED_PRINTER_CHECK)
         case 16: gcode_M16(); break;                              // M16: Expected printer check
       #endif
-      
+
       case 17: gcode_M17(); break;                                // M17: Enable all steppers
 
       #if ENABLED(SDSUPPORT)

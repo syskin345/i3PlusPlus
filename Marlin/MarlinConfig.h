@@ -31,8 +31,6 @@
 #include "drivers.h"
 #include "Configuration_adv.h"
 
-//#include "Arduino.h" //JBOZARTH: TODO this may need to be romoved
-
 #if USE_MARLINSERIAL
   #define HardwareSerial_h // trick to disable the standard HWserial
 #endif
