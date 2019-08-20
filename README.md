@@ -1,7 +1,7 @@
 
 # ![i3Plus+ header](images/i3Plus+.png)
 
-i3Plus+ is a version of [Marlin](https://github.com/MarlinFirmware/Marlin) with modifications to work with the Wanhao Duplicator i3+ and its family of rebrandings (PowerSpec Duplicator, Cacoon Create, Monoprice Maker Select, etc.). This includes both a new firmware for the LCD and a modified version of Marlin that has been updated with some custom code to accomedate the touch screen.
+i3Plus+ is a version of [Marlin](https://github.com/MarlinFirmware/Marlin) with modifications to work with the Wanhao Duplicator i3+ and its family of rebrandings (PowerSpec Duplicator, Cacoon Create, Monoprice Maker Select, etc.). This includes both a new firmware for the LCD and a modified version of Marlin that has been updated with some custom code to accomedate the touch screen and add some printer specific features.
 
 [![Travis Build Status](https://api.travis-ci.org/BozarthPrime/i3PlusPlus.svg)](https://travis-ci.org/BozarthPrime/i3PlusPlus)
 
