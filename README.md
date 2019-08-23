@@ -6,6 +6,8 @@ i3Plus+ is a version of [Marlin](https://github.com/MarlinFirmware/Marlin) with 
 [![Travis Build Status](https://api.travis-ci.org/BozarthPrime/i3PlusPlus.svg)](https://travis-ci.org/BozarthPrime/i3PlusPlus)
 
 ----
+## Using This Firmware
+You can find full instructions on how to install i3Plus+ on your printer in the [wiki](https://github.com/BozarthPrime/i3PlusPlus/wiki).
 
 ## Version of Marlin
 This project is currently based on the Marlin [1.1.9](https://github.com/MarlinFirmware/Marlin/releases/tag/1.1.9) which is the latest stable release at this time. 
