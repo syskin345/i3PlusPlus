@@ -18,9 +18,7 @@ This project is currently based on the Marlin [1.1.9](https://github.com/MarlinF
 - Visit [marlinfw.org](http://marlinfw.org/) for complete documentation on Marlin
 
 ## Contributing to i3Plus+
-Click on the [Issue Queue](https://github.com/BozarthPrime/i3PlusPlus/issues) and [Pull Requests](https://github.com/BozarthPrime/i3PlusPlus/pulls) links above at any time to see what we're currently working on.
-
-Please feel free to open pull requests against this project for revew and inclusion if you would like to help fix issues.
+You can read about contibution and community guidelines [here](https://github.com/BozarthPrime/i3PlusPlus/wiki/Contributing) in the wiki.
 
 ## Credits
 
