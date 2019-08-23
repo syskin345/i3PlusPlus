@@ -13,7 +13,6 @@ You can find full instructions on how to install i3Plus+ on your printer in the 
 This project is currently based on the Marlin [1.1.9](https://github.com/MarlinFirmware/Marlin/releases/tag/1.1.9) which is the latest stable release at this time. 
 
 ## Documentation
-- Visit https://silverquark.github.io/i3PlusPlusSite/
 - Visit [the wiki](https://github.com/BozarthPrime/i3PlusPlus/wiki) for full documentation
 - See the [Releases](https://github.com/BozarthPrime/i3PlusPlus/releases) page for Release Notes on all current and previous versions.
 - Visit [marlinfw.org](http://marlinfw.org/) for complete documentation on Marlin
